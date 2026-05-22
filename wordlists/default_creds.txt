@@ -1,0 +1,13 @@
+admin:admin
+admin:password
+admin:123456
+admin:admin123
+root:root
+root:toor
+root:password
+administrator:administrator
+administrator:password
+user:user
+user:password
+guest:guest
+test:test
