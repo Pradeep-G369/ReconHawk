@@ -64,7 +64,7 @@ Point it at a domain and it automatically:
 
 ```bash
 # Clone the repository
-git clone https://github.com/YourUsername/ReconHawk.git
+git clone https://github.com/Pradeep-G369/ReconHawk.git
 cd ReconHawk
 
 # Create virtual environment
