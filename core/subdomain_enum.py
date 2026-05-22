@@ -22,7 +22,7 @@ def passive_enum(domain):
 
     try:
         url = f"https://crt.sh/?q=%25.{domain}&output=json"
-        response = requests.get(url, timeout=config.REQUEST_TIMEOUT)
+        response = requests.get(url, timeout=15)
 
         if response.status_code == 200:
             data = response.json()
@@ -116,6 +116,6 @@ def run(domain):
 # python3 core/subdomain_enum.py
 # ─────────────────────────────────────────
 if __name__ == "__main__":
-    test_domain = "testphp.vulnweb.com"
+    test_domain = "vulnweb.com"
     results = run(test_domain)
     print(f"\nFinal list: {results}")
