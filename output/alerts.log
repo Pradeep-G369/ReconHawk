@@ -1,0 +1,12 @@
+[2026-05-22 11:19:21] [CRITICAL] CVE | testphp.vulnweb.com | CVE-2021-44228 — CVSS 10.0 — Log4Shell RCE vulnerability in Apache Log4j
+[2026-05-22 11:19:21] [HIGH] HTTP_HEADERS | testphp.vulnweb.com | Very poor HTTP security headers — score 25% — missing: Strict-Transport-Security, Content-Security-Policy, X-Frame-Options
+[2026-05-22 11:19:21] [HIGH] DNS_SECURITY | testphp.vulnweb.com | No SPF record — domain vulnerable to email spoofing
+[2026-05-22 11:19:21] [HIGH] DNS_SECURITY | testphp.vulnweb.com | No DMARC record — phishing/spoofing protection missing
+[2026-05-22 11:19:21] [CRITICAL] MISCONFIGURATION | testphp.vulnweb.com | /.git/HEAD — Git repo exposed
+[2026-05-22 11:19:21] [CRITICAL] MISCONFIGURATION | testphp.vulnweb.com | /.env — Environment file exposed
+[2026-05-22 11:21:24] [CRITICAL] CVE | testphp.vulnweb.com | CVE-2021-44228 — CVSS 10.0 — Log4Shell RCE vulnerability in Apache Log4j
+[2026-05-22 11:21:24] [HIGH] HTTP_HEADERS | testphp.vulnweb.com | Very poor HTTP security headers — score 25% — missing: Strict-Transport-Security, Content-Security-Policy, X-Frame-Options
+[2026-05-22 11:21:24] [HIGH] DNS_SECURITY | testphp.vulnweb.com | No SPF record — domain vulnerable to email spoofing
+[2026-05-22 11:21:24] [HIGH] DNS_SECURITY | testphp.vulnweb.com | No DMARC record — phishing/spoofing protection missing
+[2026-05-22 11:21:24] [CRITICAL] MISCONFIGURATION | testphp.vulnweb.com | /.git/HEAD — Git repo exposed
+[2026-05-22 11:21:24] [CRITICAL] MISCONFIGURATION | testphp.vulnweb.com | /.env — Environment file exposed
