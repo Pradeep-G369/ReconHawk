@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}— Manager View{% endblock %}
+{% block content %}
+{% set scan = data.scan %}
+{% set risk = data.risk %}
+<h1>Executive Summary — {{ scan[1] if scan else 'Unknown' }}</h1>
+
+{% if risk %}
+<div class="stat-grid" style="margin-bottom:20px">
+  <div class="stat-box">
+    <div class="stat-num" style="color:#58a6ff">{{ risk[3] }}/10</div>
+    <div class="stat-label">Risk Score</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-num">{{ risk[5] }}</div>
+    <div class="stat-label">Total CVEs</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-num">{{ data.ports|length }}</div>
+    <div class="stat-label">Open Ports</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-num">{{ data.findings|length }}</div>
+    <div class="stat-label">Findings</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Risk Distribution</h2>
+  <canvas id="riskChart" height="80"></canvas>
+</div>
+
+<div class="card">
+  <h2>Key Findings Summary</h2>
+  <table>
+    <tr><th>Severity</th><th>Count</th><th>Action Required</th></tr>
+    <tr>
+      <td><span class="badge badge-critical">CRITICAL</span></td>
+      <td>{{ risk[6] }}</td>
+      <td>Immediate remediation required</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-high">HIGH</span></td>
+      <td>{{ risk[7] }}</td>
+      <td>Remediate within 24 hours</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-medium">MEDIUM</span></td>
+      <td>{{ risk[8] }}</td>
+      <td>Remediate within 7 days</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-low">LOW</span></td>
+      <td>{{ risk[9] }}</td>
+      <td>Remediate within 30 days</td>
+    </tr>
+  </table>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Remediation Checklist</h2>
+  <table>
+    <tr><th>#</th><th>Action</th><th>Priority</th></tr>
+    <tr><td>1</td><td>Patch all Critical and High CVEs immediately</td>
+        <td><span class="badge badge-critical">CRITICAL</span></td></tr>
+    <tr><td>2</td><td>Enable HSTS and CSP security headers</td>
+        <td><span class="badge badge-high">HIGH</span></td></tr>
+    <tr><td>3</td><td>Remove exposed .git, .env, backup files</td>
+        <td><span class="badge badge-critical">CRITICAL</span></td></tr>
+    <tr><td>4</td><td>Add SPF, DMARC, DKIM DNS records</td>
+        <td><span class="badge badge-high">HIGH</span></td></tr>
+    <tr><td>5</td><td>Change all default credentials</td>
+        <td><span class="badge badge-critical">CRITICAL</span></td></tr>
+    <tr><td>6</td><td>Renew SSL certificates expiring within 30 days</td>
+        <td><span class="badge badge-medium">MEDIUM</span></td></tr>
+    <tr><td>7</td><td>Close unnecessary open ports</td>
+        <td><span class="badge badge-medium">MEDIUM</span></td></tr>
+    <tr><td>8</td><td>Implement WAF if not present</td>
+        <td><span class="badge badge-low">LOW</span></td></tr>
+  </table>
+</div>
+
+<script>
+fetch('/api/scan/{{ scan_id }}')
+  .then(r => r.json())
+  .then(d => {
+    new Chart(document.getElementById('riskChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Critical', 'High', 'Medium', 'Low'],
+        datasets: [{
+          data: [d.critical, d.high, d.medium, d.low],
+          backgroundColor: ['#ff0000','#ff6600','#ffaa00','#00aa00'],
+          borderColor: '#161b22', borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: '#c9d1d9' } }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}— Home{% endblock %}
+{% block content %}
+<h1>Scan History</h1>
+<div class="card">
+  <h2>All Scans</h2>
+  {% if scans %}
+  <table>
+    <tr>
+      <th>ID</th><th>Domain</th><th>Date</th>
+      <th>Status</th><th>Summary</th><th>Actions</th>
+    </tr>
+    {% for scan in scans %}
+    <tr>
+      <td><span class="tag">#{{ scan[0] }}</span></td>
+      <td>{{ scan[1] }}</td>
+      <td>{{ scan[2][:19] }}</td>
+      <td>
+        <span class="badge {% if scan[3]=='complete' %}badge-info{% else %}badge-medium{% endif %}">
+          {{ scan[3] }}
+        </span>
+      </td>
+      <td>{{ scan[4] or '—' }}</td>
+      <td>
+        <a href="/analyst/{{ scan[0] }}" class="btn btn-blue">Analyst</a>
+        <a href="/manager/{{ scan[0] }}" class="btn btn-green">Manager</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p style="color:#8b949e">No scans yet. Run <span class="tag">python3 main.py --target domain.com</span> to start.</p>
+  {% endif %}
+</div>
+{% endblock %}

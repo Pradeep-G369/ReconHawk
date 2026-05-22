@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}— Alerts{% endblock %}
+{% block content %}
+<h1>Alert Log</h1>
+<div class="card">
+  <h2>Critical & High Findings Log</h2>
+  {% if alerts %}
+  <table>
+    <tr><th>Timestamp</th><th>Severity</th><th>Message</th></tr>
+    {% for line in alerts %}
+    {% set parts = line.split('] ') %}
+    <tr>
+      <td style="font-size:12px;white-space:nowrap">{{ parts[0][1:] if parts|length > 0 else '' }}</td>
+      <td>
+        {% if 'CRITICAL' in line %}
+        <span class="badge badge-critical">CRITICAL</span>
+        {% elif 'HIGH' in line %}
+        <span class="badge badge-high">HIGH</span>
+        {% else %}
+        <span class="badge badge-info">INFO</span>
+        {% endif %}
+      </td>
+      <td style="font-size:12px">{{ parts[-1] if parts|length > 1 else line }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p style="color:#8b949e">No alerts yet. Alerts appear here when Critical or High findings are detected.</p>
+  {% endif %}
+</div>
+{% endblock %}

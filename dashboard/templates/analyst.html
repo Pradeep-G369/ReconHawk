@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}— Analyst View{% endblock %}
+{% block content %}
+{% set scan  = data.scan %}
+{% set risk  = data.risk %}
+<h1>Analyst View — {{ scan[1] if scan else 'Unknown' }}</h1>
+
+{% if risk %}
+<div class="stat-grid" style="margin-bottom:20px">
+  <div class="stat-box">
+    <div class="stat-num" style="color:#ff6b6b">{{ risk[6] }}</div>
+    <div class="stat-label">Critical CVEs</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-num" style="color:#ffa07a">{{ risk[7] }}</div>
+    <div class="stat-label">High CVEs</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-num" style="color:#ffd700">{{ risk[8] }}</div>
+    <div class="stat-label">Medium CVEs</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-num" style="color:#90ee90">{{ risk[3] }}</div>
+    <div class="stat-label">Overall Score</div>
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Open Ports</h2>
+  <table>
+    <tr><th>Host</th><th>Port</th><th>Protocol</th>
+        <th>Service</th><th>Product</th><th>Version</th></tr>
+    {% for p in data.ports %}
+    <tr>
+      <td>{{ p[2] }}</td><td><span class="tag">{{ p[3] }}</span></td>
+      <td>{{ p[4] }}</td><td>{{ p[5] }}</td>
+      <td>{{ p[6] }}</td><td>{{ p[7] }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" style="color:#8b949e">No ports recorded</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h2>CVEs Found</h2>
+  <table>
+    <tr><th>Host</th><th>Port</th><th>CVE ID</th>
+        <th>Score</th><th>Severity</th><th>Description</th></tr>
+    {% for c in data.cves %}
+    <tr>
+      <td>{{ c[2] }}</td>
+      <td><span class="tag">{{ c[3] }}</span></td>
+      <td><span class="tag">{{ c[4] }}</span></td>
+      <td>{{ c[5] }}</td>
+      <td><span class="badge badge-{{ c[6]|lower }}">{{ c[6] }}</span></td>
+      <td style="font-size:12px">{{ c[7][:100] }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" style="color:#8b949e">No CVEs recorded</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h2>Findings</h2>
+  <table>
+    <tr><th>Host</th><th>Category</th><th>Severity</th>
+        <th>Title</th><th>Detail</th></tr>
+    {% for f in data.findings %}
+    <tr>
+      <td>{{ f[2] }}</td><td>{{ f[3] }}</td>
+      <td><span class="badge badge-{{ f[4]|lower }}">{{ f[4] }}</span></td>
+      <td>{{ f[5] }}</td><td style="font-size:12px">{{ f[6] }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" style="color:#8b949e">No findings recorded</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h2>Subdomains</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    {% for s in data.subdomains %}
+    <span class="tag">{{ s[3] }}</span>
+    {% else %}
+    <span style="color:#8b949e">No subdomains recorded</span>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
