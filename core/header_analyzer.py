@@ -164,3 +164,55 @@ def run(hosts):
 if __name__ == "__main__":
     test_hosts = ["scanme.nmap.org", "vulnweb.com"]
     results = run(test_hosts)
+
+
+# ─────────────────────────────────────────
+# COOKIE SECURITY CHECKER
+# Checks for missing Secure, HttpOnly,
+# SameSite flags on cookies
+# ─────────────────────────────────────────
+def check_cookies(host):
+    print(f"\n[*] Cookie security check → {host}")
+    findings = []
+
+    for scheme in ["https", "http"]:
+        url = f"{scheme}://{host}"
+        try:
+            response = requests.get(
+                url,
+                timeout=config.REQUEST_TIMEOUT,
+                verify=False,
+                allow_redirects=True,
+                headers={"User-Agent": "ReconHawk-Scanner/1.0"}
+            )
+
+            cookies = response.headers.get("Set-Cookie", "")
+            if not cookies:
+                print(f"    [i] No cookies set by {host}")
+                return findings
+
+            # Check each flag
+            flags = {
+                "Secure"  : ("Secure"   in cookies, "HIGH",   "Cookie transmitted over HTTP — can be stolen"),
+                "HttpOnly": ("HttpOnly" in cookies, "HIGH",   "Cookie accessible via JavaScript — XSS risk"),
+                "SameSite": ("SameSite" in cookies, "MEDIUM", "Cookie sent on cross-site requests — CSRF risk"),
+            }
+
+            for flag, (present, severity, desc) in flags.items():
+                if present:
+                    print(f"    [✓] {flag} flag set")
+                else:
+                    findings.append({
+                        "flag"    : flag,
+                        "severity": severity,
+                        "detail"  : desc,
+                        "host"    : host,
+                    })
+                    print(f"    [✗] Missing {flag} — {severity} — {desc}")
+
+            break
+
+        except Exception:
+            continue
+
+    return findings
