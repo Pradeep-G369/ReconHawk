@@ -260,7 +260,7 @@ Fix: Use Let's Encrypt (free) to get a trusted certificate.
 
 ## Project Structure
 ReconHawk/
-├── core/               # 15 scanning & intelligence modules
+├── core/               # 14 scanning & intelligence modules
 │   ├── subdomain_enum.py
 │   ├── port_scanner.py
 │   ├── cve_lookup.py
