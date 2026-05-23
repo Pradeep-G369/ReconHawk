@@ -1,4 +1,4 @@
-# ReconHawk - Futuristic Port Heatmap
+# ReconHawk - Futuristic Port Heatmap (Corrected Signature)
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -8,16 +8,18 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
-def generate_heatmap(scan_results):
+def build_heatmap(domain, port_results, cve_results):
     print("\n[*] Generating Matrix Port Heatmap...")
     data = []
-    for host, ports in scan_results.items():
+    
+    # Process port_results
+    for host, ports in port_results.items():
         for port, info in ports.items():
-            # Include service name for better analysis
             service_name = info.get('service', 'unknown')
             data.append({"Target": host, "Exposed Port": f"{port} ({service_name})", "Status": 1})
             
     if not data:
+        print(" [-] No open ports to graph.")
         return None
         
     df = pd.DataFrame(data).pivot_table(index='Target', columns='Exposed Port', values='Status', fill_value=0)
@@ -38,10 +40,13 @@ def generate_heatmap(scan_results):
     ax.xaxis.label.set_color('#b026ff')
     ax.yaxis.label.set_color('#b026ff')
     
-    plt.title("/// EXPOSED_PORT_MATRIX ///", color='#b026ff', fontsize=16, fontweight='bold', pad=20)
+    plt.title(f"/// EXPOSED_PORT_MATRIX : {domain} ///", color='#b026ff', fontsize=16, fontweight='bold', pad=20)
     plt.tight_layout()
     
+    os.makedirs(config.GRAPHS_DIR, exist_ok=True)
     output_path = os.path.join(config.GRAPHS_DIR, "port_heatmap.png")
     plt.savefig(output_path, facecolor=fig.get_facecolor(), dpi=300)
     plt.close()
+    
+    print(f" [+] Heatmap saved to {output_path}")
     return output_path

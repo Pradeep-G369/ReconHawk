@@ -1,4 +1,4 @@
-# ReconHawk - Cyberpunk PDF Generator
+# ReconHawk - Cyberpunk PDF Generator (Corrected Signature)
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -35,9 +35,11 @@ def draw_background(canvas, doc):
     canvas.drawString(0.4*inch, doc.pagesize[1] - 0.5*inch, "SYSTEM // RECONHAWK // CLASSIFIED INTEL")
     canvas.restoreState()
 
-def generate_report(target, risk_summary, heatmap_img=None, graph_img=None):
+def build_report(domain, risk_summary, heatmap_img=None, graph_img=None):
     print("\n[*] Generating Classified Cyberpunk PDF Report...")
-    output_path = os.path.join(config.REPORTS_DIR, f"{target}_classified_report.pdf")
+    
+    os.makedirs(config.REPORTS_DIR, exist_ok=True)
+    output_path = os.path.join(config.REPORTS_DIR, f"{domain}_classified_report.pdf")
     
     doc = SimpleDocTemplate(output_path, pagesize=letter, topMargin=0.8*inch, bottomMargin=0.8*inch)
     elements = []
@@ -51,7 +53,7 @@ def generate_report(target, risk_summary, heatmap_img=None, graph_img=None):
     elements.append(Spacer(1, 2*inch))
     elements.append(Paragraph("/// TACTICAL INTELLIGENCE REPORT ///", title_style))
     elements.append(Spacer(1, 0.5*inch))
-    elements.append(Paragraph(f"<b>TARGET:</b> {target}", h2_style))
+    elements.append(Paragraph(f"<b>TARGET:</b> {domain}", h2_style))
     elements.append(Paragraph(f"<b>RISK SCORE:</b> {risk_summary.get('overall_score', 'N/A')} / 10", body_style))
     elements.append(PageBreak())
 
@@ -89,6 +91,4 @@ def generate_report(target, risk_summary, heatmap_img=None, graph_img=None):
 
     doc.build(elements, onFirstPage=draw_background, onLaterPages=draw_background)
     print(f" [v] Classified Report generated: {output_path}")
-
-if __name__ == "__main__":
-    generate_report("vulnweb.com", {"overall_score": 8.5, "counts": {"CRITICAL": 1, "HIGH": 2}})
+    return output_path
